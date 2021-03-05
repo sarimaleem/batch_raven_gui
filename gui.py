@@ -8,13 +8,13 @@ from tkinter.constants import W
 
 
 # make sure you escape spaces on your relevant system
-ravenpath = "C:\\Program^ Files\\Raven\\Raven.exe "
+ravenpath = "C:\\Program^ Files\\Raven\\Raven.exe"
 valid_extensions = [".mp3", ".wav", ".iff"]
 
 class SoundEditor:
     def __init__(self) -> None:
         self.window = tk.Tk()
-        self.curr_dir = os.getcwd() + "/soundfiles"
+        self.curr_dir = os.getcwd()
         self.create_widgets()
         self.window.mainloop()
 
@@ -22,6 +22,8 @@ class SoundEditor:
         file_dialog_button = tk.Button(
             self.window, text="select folder", command=self.get_folder)
         file_dialog_button.grid(row=1, column=1)
+        tk.Button(self.window, text="open selected files in raven", command=self.open_selected_files).grid(row=1, column=2)
+        tk.Button(self.window, text="reset selected files", command=self.reset_colors).grid(row=2, column=2)
         self.list_files()
 
     def list_files(self):
@@ -63,16 +65,24 @@ class SoundEditor:
         self.list_files()
 
     def display_sound_file(self, filename):
-        self.color_and_uncolor_buttons(filename)
-        os.system(ravenpath + self.curr_dir + "/" + filename)
+        self.color_buttons(filename)
+        # os.system(ravenpath + self.curr_dir + "/" + filename + " " + self.curr_dir + "/" + "Cricket 17.mp3")
 
-    def color_and_uncolor_buttons(self, filename):
+    def color_buttons(self, filename):
         for button in self.scrollable_frame.winfo_children():
-           button["bg"] = "SystemButtonFace"
            if(button["text"] == filename):
-               button["bg"] = "green"
+               button["bg"] = "orange"
+    
+    def open_selected_files(self):
+        file_list = ""
+        for button in self.scrollable_frame.winfo_children():
+           if(button["bg"] == "orange"):
+               file_list += self.curr_dir + "/" + button["text"] + " "
+        file_list = ravenpath + " " + file_list
+        os.system(file_list)
 
-        # self.scrollable_frame.winfo_children()[0].config(bg="green")
-
+    def reset_colors(self): 
+        for button in self.scrollable_frame.winfo_children():
+            button["bg"] = "SystemButtonFace"
 
 editor = SoundEditor()
